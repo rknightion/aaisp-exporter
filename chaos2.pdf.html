@@ -1,0 +1,2749 @@
+
+  <h1>
+   CHAOS
+  </h1>
+  <h2>
+   Andrews &amp; Arnold Ltd application interface for control
+   <br>
+   systems and ordering
+  </h2>
+  <p>
+   Adrian Kennard, Director
+  </p>
+  <p>
+   Version 2 as of Wednesday, 21 June 2017
+  </p>
+  <table>
+   <tbody><tr>
+    <td>
+     CHAOS
+    </td>
+    <td>
+     1
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Status
+    </td>
+    <td>
+     4
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Overview
+    </td>
+    <td>
+     4
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Version
+    </td>
+    <td>
+     4
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Development/test
+    </td>
+    <td>
+     4
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Authentication and security
+    </td>
+    <td>
+     5
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Dealers and managers
+    </td>
+    <td>
+     5
+    </td>
+   </tr>
+   <tr>
+    <td>
+     New accounts
+    </td>
+    <td>
+     5
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Rate limiting
+    </td>
+    <td>
+     5
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Basic operation
+    </td>
+    <td>
+     6
+    </td>
+   </tr>
+   <tr>
+    <td>
+     HTTPS
+    </td>
+    <td>
+     6
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Request format
+    </td>
+    <td>
+     6
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Response format
+    </td>
+    <td>
+     7
+    </td>
+   </tr>
+   <tr>
+    <td>
+     JSON encoding
+    </td>
+    <td>
+     7
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Subsystem and command
+    </td>
+    <td>
+     7
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Authentication
+    </td>
+    <td>
+     7
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Standard commands
+    </td>
+    <td>
+     8
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Standard Request Attributes
+    </td>
+    <td>
+     8
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Standard Response Objects
+    </td>
+    <td>
+     8
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Options system
+    </td>
+    <td>
+     9
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Options
+    </td>
+    <td>
+     9
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Option
+    </td>
+    <td>
+     9
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Attribute types
+    </td>
+    <td>
+     10
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Choice
+    </td>
+    <td>
+     11
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Pricing information
+    </td>
+    <td>
+     12
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Ordering
+    </td>
+    <td>
+     13
+    </td>
+   </tr>
+   <tr>
+    <td>
+     New customers
+    </td>
+    <td>
+     14
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Info/Adjust
+    </td>
+    <td>
+     15
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Login subsystem
+    </td>
+    <td>
+     16
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Broadband subsystem
+    </td>
+    <td>
+     16
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Availability
+    </td>
+    <td>
+     16
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Broadband specific commands
+    </td>
+    <td>
+     17
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Broadband order
+    </td>
+    <td>
+     17
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Domain subsystem
+    </td>
+    <td>
+     20
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Email subsystem
+    </td>
+    <td>
+     21
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Telephony subsystem
+    </td>
+    <td>
+     22
+    </td>
+   </tr>
+  </tbody></table>
+  <h2>
+   Status
+  </h2>
+  <p>
+   This system is still under development, and some of the features are not yet enabled or completed. Even when completed, features are subject to change (usually by adding more options). However, the system is now available for use by customers. Please let us have feedback.
+  </p>
+  <h2>
+   Overview
+  </h2>
+  <p>
+   CHAOS is an application interface (API) for machine to machine interaction with our control and ordering systems.
+  </p>
+  <p>
+   It provides a means to perform the following key operations:-
+  </p>
+  <ul>
+   <li>
+    Access information about an existing service
+   </li>
+   <li>
+    Adjust settings on an existing service
+   </li>
+   <li>
+    Obtain usage data relating to an existing service
+   </li>
+   <li>
+    Order a cease of an existing service
+   </li>
+   <li>
+    Order a change to an existing service
+   </li>
+   <li>
+    Check availability of new services
+   </li>
+   <li>
+    Order a new service, including creating a new account
+   </li>
+  </ul>
+  <p>
+   The control systems covers a wide range of services, including broadband, ethernet, telephony, domains, email, mobile SIMs, and so on.
+  </p>
+  <p>
+   Whilst CHAOS may initially not provide access to all of these services, it is intended to be a general platform that can be extended over time to provide a comprehensive machine to machine interface to all of our services.
+  </p>
+  <p>
+   Whilst the design is for machine to machine interactions, an
+   <i>
+    options
+   </i>
+   system is included that makes it possible to use a generic front end to present options to an end user for interactive operations such as ordering.
+  </p>
+  <h2>
+   Version
+  </h2>
+  <p>
+   This is version 2. The version is part of the URL for the API.
+  </p>
+  <p>
+   <a href="https://chaos2.aa.net.uk/">
+    https://chaos2.aa.net.uk/
+   </a>
+  </p>
+  <p>
+   We may add new objects and attributes without changing the version number.
+  </p>
+  <p>
+   This is an ongoing project and subject to change, but obviously we will aim to be backwards compatible, and announce any significant changes. This API is a free service, and can be withdrawn at any time. Like all of our free services it comes with a maximum of a money back guarantee, as per our normal terms.
+  </p>
+  <h2>
+   Development/test
+  </h2>
+  <p>
+   We may, at some point in the future, create a customer test platform, but at present this does not exist.
+  </p>
+  <h2>
+   Authentication and security
+  </h2>
+  <p>
+   The system make use of two separate authorisation systems - one is the accounts system which uses an account number and password to access invoicing and payment details. The other is a control pages login and password which allows access to existing services.
+  </p>
+  <p>
+   CHAOS makes use of both of these authentications systems.
+  </p>
+  <p>
+   The account number and password is considered the
+   <i>
+    master
+   </i>
+   and can be used to allow access to any of the services on that account.
+  </p>
+  <p>
+   The control login and password is considered more of a technical administration function and allows access only to the control pages services related to that login in the same way as a login to the control pages web interface. It cannot be used to place orders.
+  </p>
+  <p>
+   The principle is that access to service information, usage data, and means to adjust existing services can be done using either account or control authentication. However, any changes to billable services, such as ceasing, regrading, or ordering of new services, requires an account login.
+  </p>
+  <h2>
+   Dealers and managers
+  </h2>
+  <p>
+   A dealer for an account is permitted to place orders in relation to the account of their client. To do this, simply use the customer's account-number and the dealer's account password. The order will be logged as having been place by the dealer. Access to control pages will only for the account-number specified.
+  </p>
+  <p>
+   A dealer/manager for the control pages simply means one login can access services of some other logins - there are a number of different levels to this. Simply use the dealer control-login and control-password to access services permitted by that login. Again, access is logged against the dealer login.
+  </p>
+  <h2>
+   New accounts
+  </h2>
+  <p>
+   It is also possible to order new services as a new account holder, causing an account to be created in the process. This does not require authentication, but does require billing and bank details and is heavily rate limited.
+  </p>
+  <h2>
+   Rate limiting
+  </h2>
+  <p>
+   To avoid abuse, the system contains a number of rate limiting systems. It is unlikely that these will impact any normal users, but if you encounter errors because of rate limiting, please contact support.
+  </p>
+  <h2>
+   Basic operation
+  </h2>
+  <p>
+   The basic operation involves requests made to the API and responses returned. Each request is independent, and there are no cookies or sessions involved at the http level.
+  </p>
+  <p>
+   In many cases a single request and response can complete the action required. However, the ordering process is designed to support an iterative sequence of requests such as availability, selection of options, checking for any errors, and further submission before actually placing an order. It is, however, possible to place a complete order in one request if you have all of the correct details.
+  </p>
+  <h2>
+   HTTPS
+  </h2>
+  <p>
+   The request is sent via HTTPS to
+   <a href="https://chaos2.aa.net.uk/subsystem/command">
+    https://chaos2.aa.net.uk/subsystem/command
+   </a>
+   where
+   <i>
+    subsystem
+   </i>
+   and
+   <i>
+    command
+   </i>
+   depend on the specific request.
+  </p>
+  <p>
+   Unencrypted HTTP is not supported. Cleartext passwords are used via HTTPS but not included in responses
+  </p>
+  <h2>
+   Request format
+  </h2>
+  <p>
+   The design is to keep things simple, and as such the request consists of a number of
+   <i>
+    attributes
+   </i>
+   . There is no structure or order. Each attribute has a name (which may contain letters, numbers or hyphen/underscore) and a value (though the value is optional in the case of a Boolean attribute, simply being present means it is set). Each named attribute can only occur once in the request.
+  </p>
+  <p>
+   We recognise that CHAOS may be used by a variety of different systems from curl/wget, javascript/ajax, right through to VB/.NET systems. To support these the request can be submitted in a number of ways:-
+  </p>
+  <ul>
+   <li>
+    GET with URI encoded query string
+    <br>
+    e.g.
+    <a href="https://chaos2.aa.net.uk/broadband/quota?control_login=test@a&amp;control_password=fred&amp;service=0123456789">
+     https://chaos2.aa.net.uk/broadband/quota?control_login=test@a&amp;control_password=fred&amp;service=0123456789
+    </a>
+   </li>
+   <li>
+    POST using application/x-www-form-urlencoded
+   </li>
+   <li>
+    POST using multipart/form-data
+   </li>
+   <li>
+    POST using application/json
+    <br>
+    e.g. {"control_login":"test@a","control_password":"fred","service":"0123456789"}
+   </li>
+   <li>
+    POST using text/xml with XML attributes
+    <br>
+    e.g. &lt;chaos control-login="test@a" control-password="fred" service="0123456789"/&gt;
+   </li>
+   <li>
+    POST using text/xml with XML sub objects
+    <br>
+    e.g. &lt;chaos&gt;&lt;control-login&gt;test@a&lt;/control-login&gt;&lt;control-password&gt;fred&lt;/control-password&gt;&lt;service&gt;0123456789&lt;/service&gt;&lt;/chaos&gt;
+   </li>
+   <li>
+    POST using text/xml as SOAP
+    <br>
+    i.e. &lt;Envelope&gt; containing &lt;Body&gt; where Body uses one of the above two XML formats for the request attributes
+   </li>
+  </ul>
+  <p>
+   The XML handling does not care what order the attributes or objects are included, and ignores all namespaces. You are welcome to include namespaces though, for compatibility with systems that expect to send them. Attributes are case insensitive, and hyphens or underscores can be used interchangeably in requests. XML responses use hyphens, JSON responses use underscores.
+  </p>
+  <p>
+   The attributes to include depend on the subsystem but a number of standard attributes are defined for all subsystems.
+  </p>
+  <h2>
+   Response format
+  </h2>
+  <p>
+   The response is structured and contains a number of subordinate objects. The exact structure depends on the specific subsystem but a number of standard objects are defined for all subsystems.
+  </p>
+  <p>
+   The response can be in one of the following formats. The default is to use the same format as the request, or use JSON if form coding was used in the request. You can force the output format by appending the subsystem/command URL with /json, /xml, or /soap.
+  </p>
+  <ul>
+   <li>
+    JSON
+   </li>
+   <li>
+    XML
+   </li>
+   <li>
+    XML in SOAP
+   </li>
+  </ul>
+  <p>
+   This includes suitable XML namespaces, and includes the response objects in the
+   <code>
+    &lt;Body&gt;
+   </code>
+   . In addition, any error response is included in a standard SOAP style
+   <code>
+    &lt;Fault&gt;
+   </code>
+   object.
+  </p>
+  <h2>
+   JSON encoding
+  </h2>
+  <p>
+   Internally the system operates using XML. When producing output in JSON, hyphens are changed to underscores in attribute names. The top level object name is omitted and a JSON structure is returned. Each XML object is encoded as a structure with all attributes in the XML object included as string fields by the same name as the attribute.
+  </p>
+  <p>
+   However, subordinate objects can occur more than once in XML, so these are encoded using the name of the object as an array, maintaining the order from XML. So, if your top level JSON is in a variable called
+   <code>
+    chaos
+   </code>
+   , you could access
+   <code>
+    chaos.options[0].option[0].name
+   </code>
+   , for example. This is normally true even when there happens to be only one instance of the subordinate object so as to allow consistent coding in javascript.
+  </p>
+  <p>
+   There is an exception to this rule where we know that we will only include one instance of a subordinate object, such as
+   <code>
+    &lt;request&gt;
+   </code>
+   ,
+   <code>
+    &lt;prices&gt;
+   </code>
+   , and
+   <code>
+    &lt;terms&gt;
+   </code>
+   . In this case the JSON is not encoded using an array, hence allowing access via
+   <code>
+    chaos.prices.price[0].name
+   </code>
+   rather than
+   <code>
+    chaos.prices[0].price[0].name
+   </code>
+   for example.
+  </p>
+  <h2>
+   Subsystem and command
+  </h2>
+  <p>
+   The URL used contains the
+   <i>
+    subsystem
+   </i>
+   and
+   <i>
+    command
+   </i>
+   . When used with SOAP, this can be omitted and used with a SOAPAction header. e.g.
+   <a href="https://chaos2.aa.net.uk/">
+    https://chaos2.aa.net.uk/
+   </a>
+   and a SOAPAction of
+   <i>
+    subsystem/command
+   </i>
+   , or
+   <a href="https://chaos2.aa.net.uk/subsystem">
+    https://chaos2.aa.net.uk/subsystem
+   </a>
+   and a SOAPAction of
+   <i>
+    command
+   </i>
+   .
+  </p>
+  <h2>
+   Authentication
+  </h2>
+  <p>
+   Authentication can be provided in several ways. The simplest is the use of attributes
+   <i>
+    account-number
+   </i>
+   and
+   <i>
+    account-password
+   </i>
+   to authenticate as an account, or
+   <i>
+    control-login
+   </i>
+   and
+   <i>
+    control-password
+   </i>
+   to authenticate as a control system user. When authenticating as an account it is normal to include the
+   <i>
+    control-login
+   </i>
+   as well, and it must be one related to the account.
+  </p>
+  <p>
+   However, it is also possible to provide authentication using HTTP Basic authentication where the username is either an account number or control login and the corresponding password. This effectively sets the corresponding attributes.
+  </p>
+  <p>
+   When using SOAP it is possible to include
+   <code>
+    &lt;Header&gt;&lt;Security&gt;&lt;UsernameToken&gt;
+   </code>
+   with
+   <code>
+    &lt;Username&gt;
+   </code>
+   and
+   <code>
+    &lt;Password&gt;
+   </code>
+   to authenticate.
+  </p>
+  <h2>
+   Standard commands
+  </h2>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Command
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      availability
+     </td>
+     <td>
+      Request availability and pricing for a new service
+     </td>
+    </tr>
+    <tr>
+     <td>
+      services
+     </td>
+     <td>
+      Request list of service IDs on this control-login for this subsystem
+     </td>
+    </tr>
+    <tr>
+     <td>
+      info
+     </td>
+     <td>
+      Request information about an existing service
+     </td>
+    </tr>
+    <tr>
+     <td>
+      adjust
+     </td>
+     <td>
+      Make changes to an existing service settings
+     </td>
+    </tr>
+    <tr>
+     <td>
+      check
+     </td>
+     <td>
+      Check an order for errors or warnings
+     </td>
+    </tr>
+    <tr>
+     <td>
+      order
+     </td>
+     <td>
+      Place an order for a new service or to change an existing service
+     </td>
+    </tr>
+    <tr>
+     <td>
+      cease
+     </td>
+     <td>
+      Place an order to cease a service
+     </td>
+    </tr>
+    <tr>
+     <td>
+      usage
+     </td>
+     <td>
+      Request usage details for a specific service
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h2>
+   Standard Request Attributes
+  </h2>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Attribute
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      account-number
+     </td>
+     <td>
+      The account number for authentication, e.g. A1234A
+     </td>
+    </tr>
+    <tr>
+     <td>
+      account-password
+     </td>
+     <td>
+      The account password for authentication
+     </td>
+    </tr>
+    <tr>
+     <td>
+      control-login
+     </td>
+     <td>
+      The control systems login - used for authentication with control-password
+     </td>
+    </tr>
+    <tr>
+     <td>
+      control-password
+     </td>
+     <td>
+      The control systems password for authentication
+     </td>
+    </tr>
+    <tr>
+     <td>
+      service
+     </td>
+     <td>
+      The identifier for the specific service - the format depends on the service
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h2>
+   Standard Response Objects
+  </h2>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Object
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      request
+     </td>
+     <td>
+      Contains all of the request attributes
+     </td>
+    </tr>
+    <tr>
+     <td>
+      error
+     </td>
+     <td>
+      If present, then there was an error and the request was not actioned
+     </td>
+    </tr>
+    <tr>
+     <td>
+      options
+     </td>
+     <td>
+      Details the possible values of attributes that could be used in a further request (see below)
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h2>
+   Options system
+  </h2>
+  <p>
+   A general mechanism is used to advise what attributes may be provided, and also to indicate if there is an issue with an attribute that was provided.
+  </p>
+  <p>
+   One or more
+   <code>
+    &lt;options&gt;
+   </code>
+   objects may be present in the response each containing one or more
+   <code>
+    &lt;option&gt;
+   </code>
+   objects, and each these provide details of one request attribute. The
+   <code>
+    &lt;options&gt;
+   </code>
+   object is simply to group
+   <code>
+    &lt;option&gt;
+   </code>
+   objects cosmetically to allow better user interface presentation.
+  </p>
+  <p>
+   The
+   <code>
+    &lt;option&gt;
+   </code>
+   objects are included in the following cases:-
+  </p>
+  <ul>
+   <li>
+    Where a request has missing or incorrect attributes and so an
+    <code>
+     &lt;error&gt;
+    </code>
+    is returned, it provides details of the attributes/values required.
+   </li>
+   <li>
+    In response to an info request, detailing the attributes of a service that may be adjusted
+   </li>
+   <li>
+    In response to an availability check, detailing the services that are available
+   </li>
+   <li>
+    In response to an ordering check
+   </li>
+  </ul>
+  <p>
+   The system is designed so that it could be used to create an interactive user interface, but also so that it provides information to developers on the options that are available, hence making the system self documenting. For this reason, this manual is not updated with every minor change to options that are available.
+  </p>
+  <p>
+   Where an option has a fixed choice of possible values, these are included in subordinate
+   <code>
+    &lt;choice&gt;
+   </code>
+   objects.
+  </p>
+  <h2>
+   Options
+  </h2>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      <code>
+       &lt;options&gt;
+      </code>
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      <code>
+       title
+      </code>
+     </td>
+     <td>
+      A single line description of the group of option objects
+     </td>
+    </tr>
+    <tr>
+     <td>
+      <code>
+       description
+      </code>
+     </td>
+     <td>
+      A longer description of the group of option objects
+     </td>
+    </tr>
+    <tr>
+     <td>
+      <code>
+       help
+      </code>
+     </td>
+     <td>
+      A URI for help on the group of option objects - typically this would be a pop-up on a web page
+     </td>
+    </tr>
+    <tr>
+     <td>
+      <code>
+       img
+      </code>
+     </td>
+     <td>
+      A URI for an image related to the group of option objects
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h2>
+   Option
+  </h2>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      <code>
+       &lt;option&gt;
+      </code>
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      <code>
+       name
+      </code>
+     </td>
+     <td>
+      The name of the attribute
+     </td>
+    </tr>
+    <tr>
+     <td>
+      <code>
+       type
+      </code>
+     </td>
+     <td>
+      The type of the attribute (see below for types)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      <code>
+       optional
+      </code>
+     </td>
+     <td>
+      Set to "true" if this field is optional. For a text input field it would have to be non blank too. Note that a checkbox can be non-optional if required.
+     </td>
+    </tr>
+    <tr>
+     <td>
+      <code>
+       recheck
+      </code>
+     </td>
+     <td>
+      If present then changing this option may cause significant changes to other options, so it is recommended that the request be re-submitted after any such change.
+     </td>
+    </tr>
+    <tr>
+     <td>
+      <code>
+       value
+      </code>
+     </td>
+     <td>
+      The current or default value of the attribute
+     </td>
+    </tr>
+    <tr>
+     <td>
+      <code>
+       checked
+      </code>
+     </td>
+     <td>
+      Indicates that a
+      <i>
+       checkbox
+      </i>
+      type attribute is
+      <i>
+       checked
+      </i>
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      &lt;option&gt;
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      size
+     </td>
+     <td>
+      The suggested display size (characters) for an input value
+     </td>
+    </tr>
+    <tr>
+     <td>
+      max-length
+     </td>
+     <td>
+      The maximum number of characters for an input value - which may be enforced in a UI
+     </td>
+    </tr>
+    <tr>
+     <td>
+      title
+     </td>
+     <td>
+      A single line description of the attribute
+     </td>
+    </tr>
+    <tr>
+     <td>
+      description
+     </td>
+     <td>
+      A longer description of the attribute
+     </td>
+    </tr>
+    <tr>
+     <td>
+      help
+     </td>
+     <td>
+      A URI for help on the attribute - typically this would be a pop-up on a web page
+     </td>
+    </tr>
+    <tr>
+     <td>
+      img
+     </td>
+     <td>
+      A URI for an image related to the attribute
+     </td>
+    </tr>
+    <tr>
+     <td>
+      min
+     </td>
+     <td>
+      Minimum value acceptable (used for
+      <i>
+       quantity
+      </i>
+      and
+      <i>
+       date
+      </i>
+      )
+     </td>
+    </tr>
+    <tr>
+     <td>
+      max
+     </td>
+     <td>
+      Maximum value acceptable (used for
+      <i>
+       quantity
+      </i>
+      and
+      <i>
+       date
+      </i>
+      )
+     </td>
+    </tr>
+    <tr>
+     <td>
+      error
+     </td>
+     <td>
+      An error description indicating that the previously supplied value for this attribute was unacceptable
+     </td>
+    </tr>
+    <tr>
+     <td>
+      warning
+     </td>
+     <td>
+      A warning description indicating that the previously supplied value for this attribute is valid but seems unlikely and may need checking
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h2>
+   Attribute types
+  </h2>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      type
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      hidden
+     </td>
+     <td>
+      The attribute must be provided with the value specified.
+     </td>
+    </tr>
+    <tr>
+     <td>
+      fixed
+     </td>
+     <td>
+      As hidden, but value may be displayed to user
+     </td>
+    </tr>
+    <tr>
+     <td>
+      text
+     </td>
+     <td>
+      A simple text input
+     </td>
+    </tr>
+    <tr>
+     <td>
+      password
+     </td>
+     <td>
+      A password input - beware of auto-filled passwords on browsers
+     </td>
+    </tr>
+    <tr>
+     <td>
+      quantity
+     </td>
+     <td>
+      A quantity, default is positive integer.
+     </td>
+    </tr>
+    <tr>
+     <td>
+      checkbox
+     </td>
+     <td>
+      A boolean attribute. If
+      <i>
+       checked
+      </i>
+      it is included in the request attributes, and if not, then it is not. A value can be sent in the request but it is ignored.
+     </td>
+    </tr>
+    <tr>
+     <td>
+      choice
+     </td>
+     <td>
+      The value must be taken from a set of &lt;choice&gt; sub objects
+     </td>
+    </tr>
+    <tr>
+     <td>
+      select
+     </td>
+     <td>
+      The same as choice, but recommended that a pull down select is used when presented to a user
+     </td>
+    </tr>
+    <tr>
+     <td>
+      date
+     </td>
+     <td>
+      A date (YYYY-MM-DD).
+     </td>
+    </tr>
+    <tr>
+     <td>
+      datetime
+     </td>
+     <td>
+      A datetime (YYYY-MM-DD HH:MM:SS).
+     </td>
+    </tr>
+    <tr>
+     <td>
+      time
+     </td>
+     <td>
+      A time (HH:MM:SS)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      email
+     </td>
+     <td>
+      An email address
+     </td>
+    </tr>
+    <tr>
+     <td>
+      telephone
+     </td>
+     <td>
+      A telephone number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      postcode
+     </td>
+     <td>
+      A UK postcode
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h2>
+   Choice
+  </h2>
+  <p>
+   Where the attribute is a choice or select, there will be &lt;choice&gt; sub objects listing the values that are allowed.
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      &lt;choice&gt;
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      value
+     </td>
+     <td>
+      The value for this choice
+     </td>
+    </tr>
+    <tr>
+     <td>
+      title
+     </td>
+     <td>
+      One line description
+     </td>
+    </tr>
+    <tr>
+     <td>
+      description
+     </td>
+     <td>
+      Longer description for this value
+     </td>
+    </tr>
+    <tr>
+     <td>
+      help
+     </td>
+     <td>
+      A URI for help on the attribute - typically this would be a pop-up on a web page
+     </td>
+    </tr>
+    <tr>
+     <td>
+      img
+     </td>
+     <td>
+      A URI for an image related to the attribute
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h2>
+   Pricing information
+  </h2>
+  <p>
+   It is important to ensure that any interactive ordering system presents the pricing details of options that are selected. To enable this &lt;option&gt; and &lt;choice&gt; can contain a number of
+   <i>
+    price
+   </i>
+   - fields which can be used to specify the price.
+  </p>
+  <p>
+   Pricing is, however, not simply a matter of one value. There may be several aspects to a price including
+   <i>
+    Installation
+   </i>
+   ,
+   <i>
+    Equipment
+   </i>
+   ,
+   <i>
+    Monthly
+   </i>
+   ,
+   <i>
+    Early termination
+   </i>
+   ,
+   <i>
+    Cease charges
+   </i>
+   , and so on.
+  </p>
+  <p>
+   To accommodate this in a general way, each type of price is given a simple tag, such as
+   <i>
+    install
+   </i>
+   , and a field is included in the &lt;prices&gt; object. This contains a &lt;price&gt; object for each type of price.
+  </p>
+  <p>
+   The &lt;prices&gt; object also has
+   <i>
+    vat-preferred
+   </i>
+   which can be "inc" or "exc" as a guide to how pricing should be shown to the customer.
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      &lt;price&gt;
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      name
+     </td>
+     <td>
+      Type of pricing, e.g. "install"
+     </td>
+    </tr>
+    <tr>
+     <td>
+      title
+     </td>
+     <td>
+      One line description, e.g. "One-off installation charges"
+     </td>
+    </tr>
+    <tr>
+     <td>
+      suffix
+     </td>
+     <td>
+      If pricing to have a suffix, e.g. "/month"
+     </td>
+    </tr>
+    <tr>
+     <td>
+      inc
+     </td>
+     <td>
+      Total inclusive of VAT prices for current selected options in request
+     </td>
+    </tr>
+    <tr>
+     <td>
+      exc
+     </td>
+     <td>
+      Total exclusive of VAT prices for current selected options in request
+     </td>
+    </tr>
+    <tr>
+     <td>
+      help
+     </td>
+     <td>
+      A URI for help on the attribute - typically this would be a pop-up on a web page
+     </td>
+    </tr>
+    <tr>
+     <td>
+      img
+     </td>
+     <td>
+      A URI for an image related to the attribute
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   &lt;options&gt;, &lt;option&gt; and &lt;choice&gt; can then include a number of fields of the form
+   <i>
+    price-tag-inc
+   </i>
+   and
+   <i>
+    price-tag-exc
+   </i>
+   which specify the price in pounds both VAT inclusive and VAT exclusive,
+   <i>
+    tag
+   </i>
+   being the type of price such as "install".
+  </p>
+  <p>
+   To work out the total for each type of price, add up any prices in &lt;options&gt;, &lt;option&gt;, and any prices in &lt;choice&gt; for the choice value that matches the option value. These need to be added up separately for VAT inclusive and exclusive amounts. Note where &lt;option&gt; is type checkbox, only add if checked.
+  </p>
+  <h2>
+   Ordering
+  </h2>
+  <p>
+   The ordering process usually starts by performing an availability check of some sort.
+  </p>
+  <p>
+   This returns &lt;options&gt;/&lt;option&gt; objects asking for more information, and can include a &lt;prices&gt; object with price headers.
+  </p>
+  <p>
+   Once enough details are provided to allow an order to at least be checked, the &lt;prices&gt; object will contain a
+   <i>
+    complete
+   </i>
+   field.
+  </p>
+  <p>
+   At this stage it is possible to run &lt;check&gt; which will simply confirm all attributes are sensible and that an order could be placed. If not, then an &lt;error&gt; is returned. It is also possible at this stage for individual options to have a warning provided even when no &lt;error&gt;.
+  </p>
+  <p>
+   The availability, and check functions also provide a &lt;terms&gt; objects which contains one or more &lt;term&gt; objects with text descriptions of key contract terms. The &lt;terms&gt; contains name/title/description which is used for a check box - the named attribute should be sent to indicate agreement to the terms.
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      &lt;terms&gt;
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      name
+     </td>
+     <td>
+      Name of attribute to be sent to confirm terms agreed
+     </td>
+    </tr>
+    <tr>
+     <td>
+      title
+     </td>
+     <td>
+      A single line description of the group of option objects
+     </td>
+    </tr>
+    <tr>
+     <td>
+      description
+     </td>
+     <td>
+      A longer description of the group of option objects
+     </td>
+    </tr>
+    <tr>
+     <td>
+      help
+     </td>
+     <td>
+      A URI for help on the group of option objects - typically this would be a pop-up on a web page
+     </td>
+    </tr>
+    <tr>
+     <td>
+      img
+     </td>
+     <td>
+      A URI for an image related to the group of option objects
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   Note that it is quite valid to place a complete order in one request if all details are known.
+  </p>
+  <p>
+   The response to
+   <i>
+    check
+   </i>
+   or
+   <i>
+    order
+   </i>
+   commands if all is well is no &lt;error&gt;, though the &lt;options&gt;, etc, are all still included as normal.
+  </p>
+  <p>
+   The response to an order includes one or more &lt;OrderConfirmation&gt; as well as &lt;SalesInvoice&gt; or &lt;ProformaSalesInvoice&gt; objects. These are formatted in accordance with our accounts system XML specifications.
+  </p>
+  <h2>
+   New customers
+  </h2>
+  <p>
+   For new customers the &lt;option&gt; objects will include a lot of attributes that start
+   <i>
+    account-
+   </i>
+   which are used to create the new account and define the invoice address.
+  </p>
+  <p>
+   In the case of services that include equipment, there may also be a number of attributes that start with
+   <i>
+    delivery-
+   </i>
+   which define the delivery address using similar fields.
+  </p>
+  <p>
+   Obviously the best way to manage these is present them all to the user. Some fields may only be included based on the selection made in other attributes.
+  </p>
+  <p>
+   The main suffixes used in these fields are :-
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Suffix
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      name
+     </td>
+     <td>
+      The contact person's name, usually done without Mr/Mrs prefix
+     </td>
+    </tr>
+    <tr>
+     <td>
+      company
+     </td>
+     <td>
+      The company name
+     </td>
+    </tr>
+    <tr>
+     <td>
+      type
+     </td>
+     <td>
+      Used as account-type, the type of the account
+     </td>
+    </tr>
+    <tr>
+     <td>
+      address1
+     </td>
+     <td>
+      First line of address - don't repeat company name here
+     </td>
+    </tr>
+    <tr>
+     <td>
+      address2
+     </td>
+     <td>
+      Second line of address
+     </td>
+    </tr>
+    <tr>
+     <td>
+      address3
+     </td>
+     <td>
+      Third line of address
+     </td>
+    </tr>
+    <tr>
+     <td>
+      posttown
+     </td>
+     <td>
+      The post town - note that county is not required
+     </td>
+    </tr>
+    <tr>
+     <td>
+      postcode
+     </td>
+     <td>
+      The UK post code
+     </td>
+    </tr>
+    <tr>
+     <td>
+      telephone
+     </td>
+     <td>
+      Contact telephone number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      mobile
+     </td>
+     <td>
+      Contact mobile telephone number (typically for SMS)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      regno
+     </td>
+     <td>
+      Company registration number
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   The account type is quite important and impacts some of the other fields that may be needed.
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Type
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      I
+     </td>
+     <td>
+      Individual (e.g. residential / personal)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      M
+     </td>
+     <td>
+      Minor (under 18)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      L
+     </td>
+     <td>
+      Small limited company (10 or fewer people working for company)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      G
+     </td>
+     <td>
+      Larger limited company (more than 10 people working for company)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      C
+     </td>
+     <td>
+      Communications provider as defined by The Communications Act
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Q
+     </td>
+     <td>
+      Public Limited Company (plc)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      P
+     </td>
+     <td>
+      Partnership (put the trading name in
+      <i>
+       company
+      </i>
+      )
+     </td>
+    </tr>
+    <tr>
+     <td>
+      S
+     </td>
+     <td>
+      Sole trader (put the trading name in
+      <i>
+       company
+      </i>
+      )
+     </td>
+    </tr>
+    <tr>
+     <td>
+      R
+     </td>
+     <td>
+      Registered Charity (put charity name in
+      <i>
+       company
+      </i>
+      )
+     </td>
+    </tr>
+    <tr>
+     <td>
+      F
+     </td>
+     <td>
+      Friendly Society (put society name in
+      <i>
+       company
+      </i>
+      )
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h2>
+   Info/Adjust
+  </h2>
+  <p>
+   One of the useful features of CHAOS is the ability to access the basic settings of services, and make changes.
+  </p>
+  <p>
+   This is designed to be as generic a possible, and hence allow us to expand the system quickly to all services on our control pages.
+  </p>
+  <p>
+   The
+   <i>
+    info
+   </i>
+   request uses the
+   <i>
+    service
+   </i>
+   attribute to specify the specific service. The response includes an
+   <i>
+    &lt;info&gt;
+   </i>
+   object with a simple list of all attributes which can be provided.
+  </p>
+  <p>
+   In addition the response includes
+   <i>
+    &lt;options&gt;
+   </i>
+   which lists all of the attributes (with current values) which may be changed. It includes the data type and if appropriate
+   <i>
+    &lt;choice&gt;
+   </i>
+   objects for the changes.
+  </p>
+  <p>
+   You can then use
+   <i>
+    adjust
+   </i>
+   with the attributes provide in the
+   <i>
+    &lt;options&gt;
+   </i>
+   response to make any changes. The response is either an error (with
+   <i>
+    &lt;options&gt;
+   </i>
+   making it clear where the error lies), or just the
+   <i>
+    &lt;info&gt;
+   </i>
+   object containing the new values.
+  </p>
+  <p>
+   The exact set of attributes which can be accessed or changed may change over time, so it is important to try and make use of the
+   <i>
+    &lt;options&gt;
+   </i>
+   response to know what is possible.
+  </p>
+  <p>
+   It is possible, though unlikely, that we might remove an attribute at some point in the future.
+  </p>
+  <p>
+   In some cases a change may cause some knock on effect or action, such as changing broadband line settings. This could mean losing sync, for example.
+  </p>
+  <h2>
+   Login subsystem
+  </h2>
+  <p>
+   The
+   <i>
+    login
+   </i>
+   subsystem us used simply to allow
+   <i>
+    info
+   </i>
+   and
+   <i>
+    adjust
+   </i>
+   of settings relating to a control login. The
+   <i>
+    service
+   </i>
+   identifier is the control-login in question, e.g. test@a
+  </p>
+  <p>
+   It is also useful with the
+   <i>
+    services
+   </i>
+   command which returns a list of the control system logins available.
+  </p>
+  <h2>
+   Broadband subsystem
+  </h2>
+  <p>
+   The
+   <i>
+    broadband
+   </i>
+   subsystem relates to ADSL, VDSL, and FTTP Internet access services.
+  </p>
+  <p>
+   The
+   <i>
+    service
+   </i>
+   identifier can be specified in one of a number of formats and relates to a specific
+   <i>
+    line
+   </i>
+   and not a set of lines in any way:-
+  </p>
+  <ul>
+   <li>
+    Telephone number of the line for broadband on a phone line
+   </li>
+   <li>
+    A&amp;A line ID (simply a number, usually 5 digits) as reported on the voice message on our PSTN lines
+   </li>
+   <li>
+    Carrier circuit ID, e.g. BBEU something, as shown on graphs in some cases
+   </li>
+  </ul>
+  <p>
+   The
+   <i>
+    info
+   </i>
+   request provides details relating to broadband services which can include quota information and line speed information. Being XML we may extend the fields included over time.
+  </p>
+  <h2>
+   Availability
+  </h2>
+  <p>
+   The availability checker can provide details of possible broadband services related to a phone line or address.
+  </p>
+  <p>
+   There are several ways to identify the service or address for which you want to check availability:-
+  </p>
+  <ul>
+   <li>
+    Provide
+    <i>
+     service
+    </i>
+    identifier for an existing A&amp;A service that you have.
+   </li>
+   <li>
+    Provide
+    <i>
+     postcode
+    </i>
+    , and
+    <i>
+     property
+    </i>
+    (house number or name). If this is not unique then &lt;options&gt; will give a list of possibilities using an
+    <i>
+     address-key
+    </i>
+    .
+   </li>
+   <li>
+    Provide
+    <i>
+     postcode
+    </i>
+    and
+    <i>
+     address-key
+    </i>
+    - this will normally only be after you are offered a choice of addresses in &lt;options&gt;, but if you have other means to find an address key you can use this directly.
+   </li>
+   <li>
+    Provide
+    <i>
+     postcode
+    </i>
+    and
+    <i>
+     number
+    </i>
+    (directory number, aka the phone number of a phone line).
+   </li>
+  </ul>
+  <p>
+   For a new account it is a good idea to include
+   <i>
+    account-type
+   </i>
+   in the availability check to only offer appropriate services. If the specific type is not yet known, use
+   <i>
+    account-type="I"
+   </i>
+   to indicate an individual wanting residential or home/office services, and
+   <i>
+    account-type="L"
+   </i>
+   to indicate a business wanting home/office or office services. If omitted then all services are offered. It is useful to understand home/business as well so that VAT inclusive or exclusive pricing can be shown by default.
+  </p>
+  <p>
+   The response is by way of a number &lt;options&gt; objects for each main service that is available, and then &lt;option&gt;/&lt;choice&gt; for quota and other characteristics of the service.
+  </p>
+  <h2>
+   Broadband specific commands
+  </h2>
+  <p>
+   There are some specific additional commands that relate to the broadband subsystem.
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Command
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      kill
+     </td>
+     <td>
+      Perform a PPP kill/restart on the service
+     </td>
+    </tr>
+    <tr>
+     <td>
+      quota
+     </td>
+     <td>
+      Advise monthly quota and remaining quota on the service
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h2>
+   Broadband order
+  </h2>
+  <p>
+   There are a set of attributes that need to be sent to complete an order. The &lt;options&gt; systems provides full details of these in the various circumstances, but the following list represents the main fields and their meaning. These are in addition to account-number/control-login as above.
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      availability/check/order
+     </th>
+     <th>
+      Values
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      api
+     </td>
+     <td>
+      N/A
+     </td>
+     <td>
+      Tells subsystem to allow some values to be skipped, such as customer-type and tech, allowing simpler availability checks.
+     </td>
+    </tr>
+    <tr>
+     <td>
+      token
+     </td>
+     <td>
+      Text
+     </td>
+     <td>
+      Optional token used to avoid duplicate orders. Interactive systems should simply include this as a hidden field as requested, and send in next request.
+     </td>
+    </tr>
+    <tr>
+     <td>
+      new-account
+     </td>
+     <td>
+      Y/N
+     </td>
+     <td>
+      Optional, and controls options for account-number/password
+     </td>
+    </tr>
+    <tr>
+     <td>
+      customer-type
+     </td>
+     <td>
+      H/O
+     </td>
+     <td>
+      Optional, restricts options for Home or Office customer
+     </td>
+    </tr>
+    <tr>
+     <td>
+      tech
+     </td>
+     <td>
+      ADSL/
+      <br>
+      VDSL
+     </td>
+     <td>
+      Type of service requested. Note VDSL also includes FTTP
+     </td>
+    </tr>
+    <tr>
+     <td>
+      new-line
+     </td>
+     <td>
+      Y/N/E
+     </td>
+     <td>
+      Controls options for if a new phone line needed (Y) or not (N), or existing service (E)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      number
+     </td>
+     <td>
+      Telephone
+     </td>
+     <td>
+      The phone number for the order
+     </td>
+    </tr>
+    <tr>
+     <td>
+      service
+     </td>
+     <td>
+      ID
+     </td>
+     <td>
+      An ID for an existing service
+     </td>
+    </tr>
+    <tr>
+     <td>
+      property
+     </td>
+     <td>
+      Text
+     </td>
+     <td>
+      Property house number or name
+     </td>
+    </tr>
+    <tr>
+     <td>
+      postcode
+     </td>
+     <td>
+      Postcode
+     </td>
+     <td>
+      Postcode for order installation
+     </td>
+    </tr>
+    <tr>
+     <td>
+      address-key
+     </td>
+     <td>
+      DC+NAD
+     </td>
+     <td>
+      An address key for specific address wishing a postcode
+     </td>
+    </tr>
+    <tr>
+     <td>
+      package
+     </td>
+     <td>
+      Text
+     </td>
+     <td>
+      Selected package, e.g. H1ADSL, H1VDSL, H1VDSLTB, etc.
+     </td>
+    </tr>
+    <tr>
+     <td>
+      crd
+     </td>
+     <td>
+      Date
+     </td>
+     <td>
+      The Customer Required Date, optional, black or omit for ASAP
+     </td>
+    </tr>
+    <tr>
+     <td>
+      care
+     </td>
+     <td>
+      Y/N
+     </td>
+     <td>
+      Enhanced care option
+     </td>
+    </tr>
+    <tr>
+     <td>
+      annexm
+     </td>
+     <td>
+     </td>
+     <td>
+      If annex M required
+     </td>
+    </tr>
+    <tr>
+     <td>
+      premium
+     </td>
+     <td>
+     </td>
+     <td>
+      If 20CN premium option required
+     </td>
+    </tr>
+    <tr>
+     <td>
+      pstnto
+     </td>
+     <td>
+     </td>
+     <td>
+      If PSTN take over required
+     </td>
+    </tr>
+    <tr>
+     <td>
+      capt
+     </td>
+     <td>
+      4010
+     </td>
+     <td>
+      If capping to 40Mb/10Mbs is required on VDSL
+     </td>
+    </tr>
+    <tr>
+     <td>
+      router
+     </td>
+     <td>
+      N/R/M
+     </td>
+     <td>
+      No (N), Router (R), Modem (M)
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      availability/check/order
+     </th>
+     <th>
+      Values
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      wifi
+     </td>
+     <td>
+     </td>
+     <td>
+      If 3 pack Unifi WiFi required
+     </td>
+    </tr>
+    <tr>
+     <td>
+      firebrick
+     </td>
+     <td>
+     </td>
+     <td>
+      If FB2700 required
+     </td>
+    </tr>
+    <tr>
+     <td>
+      quota
+     </td>
+     <td>
+      Bytes
+     </td>
+     <td>
+      Monthly quota required (not needed for H1VDSLTB/S1VDSLTB)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      units
+     </td>
+     <td>
+      Units
+     </td>
+     <td>
+      Units required on units quota
+     </td>
+    </tr>
+    <tr>
+     <td>
+      block
+     </td>
+     <td>
+      Y/N/A
+     </td>
+     <td>
+      Yes/No/Auto blocking action for quota based service
+     </td>
+    </tr>
+    <tr>
+     <td>
+      lines
+     </td>
+     <td>
+      N
+     </td>
+     <td>
+      If multiple lines required on same login of same type
+     </td>
+    </tr>
+    <tr>
+     <td>
+      o1
+     </td>
+     <td>
+      A/V list
+     </td>
+     <td>
+      The lines required for an Office::1 order, e.g. VA is VDSL+ADSL, VVA is 2xVDSL+ADSL
+     </td>
+    </tr>
+    <tr>
+     <td>
+      filter
+     </td>
+     <td>
+      N
+     </td>
+     <td>
+      Non optional field, must be N
+     </td>
+    </tr>
+    <tr>
+     <td>
+      moving
+     </td>
+     <td>
+     </td>
+     <td>
+      If cease of old line on login is required on completion of install
+     </td>
+    </tr>
+    <tr>
+     <td>
+      move-account
+     </td>
+     <td>
+     </td>
+     <td>
+      If update of billing address is required on completion of install
+     </td>
+    </tr>
+    <tr>
+     <td>
+      login
+     </td>
+     <td>
+      login@a/q
+     </td>
+     <td>
+      The login where adding line to existing login or moving line
+     </td>
+    </tr>
+    <tr>
+     <td>
+      purchase-order
+     </td>
+     <td>
+      P/O No
+     </td>
+     <td>
+      Purchase order number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      purchase-reference
+     </td>
+     <td>
+      Test
+     </td>
+     <td>
+      Text for this line as reference on invoices
+     </td>
+    </tr>
+    <tr>
+     <td>
+      account-name/etc
+     </td>
+     <td>
+      Address
+     </td>
+     <td>
+      The address fields for a new account
+     </td>
+    </tr>
+    <tr>
+     <td>
+      delivery-name/etc
+     </td>
+     <td>
+      Address
+     </td>
+     <td>
+      The address fields for a separate delivery address
+     </td>
+    </tr>
+    <tr>
+     <td>
+      delivery-signed-for
+     </td>
+     <td>
+     </td>
+     <td>
+      If delivery is to be signed for
+     </td>
+    </tr>
+    <tr>
+     <td>
+      delivery-safe-place
+     </td>
+     <td>
+      Text
+     </td>
+     <td>
+      Alternatively if a safe place can be used for delivery
+     </td>
+    </tr>
+    <tr>
+     <td>
+      site-name/email/mobile
+     </td>
+     <td>
+      Text
+     </td>
+     <td>
+      Site contact details for installation
+     </td>
+    </tr>
+    <tr>
+     <td>
+      site-floor/room/position
+     </td>
+     <td>
+      Text
+     </td>
+     <td>
+      PSTN install extra details
+     </td>
+    </tr>
+    <tr>
+     <td>
+      site-engineer-notes
+     </td>
+     <td>
+      Test
+     </td>
+     <td>
+      PSTN engineer notes
+     </td>
+    </tr>
+    <tr>
+     <td>
+      terms-agreed
+     </td>
+     <td>
+     </td>
+     <td>
+      Must be sent to confirm agreed terms
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   When a broadband
+   <i>
+    order
+   </i>
+   command completes and &lt;order&gt; object is returned.
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      &lt;order&gt;
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      account-number
+     </td>
+     <td>
+      The account number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      account-password-url
+     </td>
+     <td>
+      If a new account, the URL to set the account password, valid for one use and today only
+     </td>
+    </tr>
+    <tr>
+     <td>
+      control-login
+     </td>
+     <td>
+      The control login
+     </td>
+    </tr>
+    <tr>
+     <td>
+      control-password-url
+     </td>
+     <td>
+      If a new control-login, the URL for setting control system password, valid for one use and today only
+     </td>
+    </tr>
+    <tr>
+     <td>
+      ripe-mic
+     </td>
+     <td>
+      The allocated RIPE handle
+     </td>
+    </tr>
+    <tr>
+     <td>
+      title
+     </td>
+     <td>
+      Heading for displayed ordering confirmation
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      &lt;order&gt;
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      description
+     </td>
+     <td>
+      Text of order confirmation
+     </td>
+    </tr>
+    <tr>
+     <td>
+      &lt;availability&gt;
+     </td>
+     <td>
+      Some fields detailing availability
+     </td>
+    </tr>
+    <tr>
+     <td>
+      &lt;InstallationAddress&gt;
+     </td>
+     <td>
+      Installation address details
+     </td>
+    </tr>
+    <tr>
+     <td>
+      order-confirmation
+     </td>
+     <td>
+      The accounts system order confirmation number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      order-confirmation-pdf-url
+     </td>
+     <td>
+      URL to access accounts order confirmation document
+     </td>
+    </tr>
+    <tr>
+     <td>
+      &lt;OrderConfirmation&gt;
+     </td>
+     <td>
+      Accounts system Order Confirmation
+     </td>
+    </tr>
+    <tr>
+     <td>
+      sales-invoice
+     </td>
+     <td>
+      The accounts system sales invoice number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      sales-invoice-pdf-url
+     </td>
+     <td>
+      URL to access accounts system sales invoice document
+     </td>
+    </tr>
+    <tr>
+     <td>
+      &lt;SalesInvoice&gt;
+     </td>
+     <td>
+      Accounts system Sales Invoice
+     </td>
+    </tr>
+    <tr>
+     <td>
+      delivery-note
+     </td>
+     <td>
+      The accounts system delivery note number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      delivery-note-pdf-url
+     </td>
+     <td>
+      URL to access accounts system delivery note document
+     </td>
+    </tr>
+    <tr>
+     <td>
+      &lt;DeliveryNote&gt;
+     </td>
+     <td>
+      Accounts system Delivery Note
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h1>
+   Domain subsystem
+  </h1>
+  <p>
+   TBA
+  </p>
+  <h1>
+   Email subsystem
+  </h1>
+  <p>
+   TBA
+  </p>
+  <h2>
+   Telephony subsystem
+  </h2>
+  <p>
+   The telephone system includes an standard ordering system as describe above, and also the following commands.
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Command
+     </th>
+     <th>
+      Meaning
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      ratecard
+     </td>
+     <td>
+      Provides list of numbers mapped to rate names and a list or rates and the charges for each rate.
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h1>
+   SIM subsystem
+  </h1>
+  <p>
+   TBA
+  </p>
+ 
+
