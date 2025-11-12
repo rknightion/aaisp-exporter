@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  aaisp-exporter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aaisp-exporter
+    restart: unless-stopped
+    ports:
+      - "9099:9099"
+    environment:
+      # Authentication (provide via .env file or environment)
+      - AAISP_EXPORTER_AUTH__CONTROL_LOGIN=${AAISP_EXPORTER_AUTH__CONTROL_LOGIN}
+      - AAISP_EXPORTER_AUTH__CONTROL_PASSWORD=${AAISP_EXPORTER_AUTH__CONTROL_PASSWORD}
+      # Optional account authentication
+      # - AAISP_EXPORTER_AUTH__ACCOUNT_NUMBER=${AAISP_EXPORTER_AUTH__ACCOUNT_NUMBER}
+      # - AAISP_EXPORTER_AUTH__ACCOUNT_PASSWORD=${AAISP_EXPORTER_AUTH__ACCOUNT_PASSWORD}
+
+      # Server settings
+      - AAISP_EXPORTER_SERVER__HOST=0.0.0.0
+      - AAISP_EXPORTER_SERVER__PORT=9099
+
+      # Logging
+      - AAISP_EXPORTER_LOGGING__LEVEL=INFO
+      - AAISP_EXPORTER_LOGGING__JSON=true
+
+      # Collection intervals (optional)
+      # - AAISP_EXPORTER_INTERVALS__FAST=60
+      # - AAISP_EXPORTER_INTERVALS__MEDIUM=300
+      # - AAISP_EXPORTER_INTERVALS__SLOW=900
+
+      # API settings (optional)
+      # - AAISP_EXPORTER_API__TIMEOUT=30
+      # - AAISP_EXPORTER_API__MAX_RETRIES=3
+      # - AAISP_EXPORTER_API__CONCURRENCY_LIMIT=5
+
+      # Collector toggles (optional)
+      # - AAISP_EXPORTER_COLLECTORS__ENABLE_BROADBAND=true
+      # - AAISP_EXPORTER_COLLECTORS__ENABLE_TELEPHONY=false
+      # - AAISP_EXPORTER_COLLECTORS__ENABLE_LOGIN=false
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:9099/health', timeout=5.0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+    # Optional: Add to Prometheus network
+    # networks:
+    #   - monitoring
+
+    # Optional: Volume for persistent data (if needed)
+    # volumes:
+    #   - ./data:/app/data
+
+# Optional: Define networks
+# networks:
+#   monitoring:
+#     external: true
