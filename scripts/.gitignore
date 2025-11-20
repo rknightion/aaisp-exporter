@@ -1,0 +1,5 @@
+# Ignore response logs
+logs/
+
+# Keep command history tracked for convenience
+!.chaos_history

@@ -23,7 +23,7 @@ services:
 
       # Logging
       - AAISP_EXPORTER_LOGGING__LEVEL=INFO
-      - AAISP_EXPORTER_LOGGING__JSON=true
+      - AAISP_EXPORTER_LOGGING__JSON_FORMAT=true
 
       # Collection intervals (optional)
       # - AAISP_EXPORTER_INTERVALS__FAST=60
@@ -37,8 +37,13 @@ services:
 
       # Collector toggles (optional)
       # - AAISP_EXPORTER_COLLECTORS__ENABLE_BROADBAND=true
+
+      # Only enable telephony if you have AAISP VoIP services (will warn otherwise)
       # - AAISP_EXPORTER_COLLECTORS__ENABLE_TELEPHONY=false
-      # - AAISP_EXPORTER_COLLECTORS__ENABLE_LOGIN=false
+      # - AAISP_EXPORTER_COLLECTORS__ENABLE_TELEPHONY_RATECARD=false
+
+      # Control login collector
+      # - AAISP_EXPORTER_COLLECTORS__ENABLE_CONTROL_LOGIN=false
 
     healthcheck:
       test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:9099/health', timeout=5.0)"]

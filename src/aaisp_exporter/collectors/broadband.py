@@ -1,8 +1,9 @@
 """Broadband metrics collector."""
 
+from datetime import datetime
 from typing import Any
 
-from prometheus_client import Counter, Gauge
+from prometheus_client import Gauge
 
 from aaisp_exporter.collectors.base import MetricCollector
 from aaisp_exporter.core.constants import UpdateTier
@@ -42,6 +43,12 @@ class BroadbandQuotaCollector(MetricCollector):
             labelnames=["service", "login"],
         )
 
+        self.quota_timestamp = self._create_gauge(
+            "aaisp_broadband_quota_timestamp_seconds",
+            "Timestamp of quota snapshot (epoch seconds)",
+            labelnames=["service", "login"],
+        )
+
     async def _collect_impl(self) -> None:
         """Collect quota metrics for all broadband services."""
         if not self.settings.collectors.enable_broadband:
@@ -72,25 +79,49 @@ class BroadbandQuotaCollector(MetricCollector):
         """Collect quota metrics for a specific service."""
         try:
             quota_data = await self.client.broadband_quota(service)
+            if not quota_data:
+                logger.debug("No quota data returned", service=service)
+                return
 
-            # Extract login from response (if available)
             login = quota_data.get("login", self.settings.auth.control_login or "unknown")
 
-            # Extract quota values
-            # Note: Actual field names may differ based on API response
-            total = self._parse_bytes(quota_data.get("quota", 0))
-            used = self._parse_bytes(quota_data.get("used", 0))
-            remaining = self._parse_bytes(quota_data.get("remaining", 0))
+            # API returns quota as quota_monthly/quota_remaining fields.
+            total = self._parse_bytes(
+                quota_data.get("quota_monthly", quota_data.get("quota"))
+            )
+            remaining = self._parse_bytes(
+                quota_data.get("quota_remaining", quota_data.get("remaining"))
+            )
 
-            # Calculate percentage if total > 0
-            percentage = (used / total * 100) if total > 0 else 0
+            if total is None and remaining is None:
+                logger.debug("Quota fields missing", service=service)
+                return
 
-            # Set metrics
+            used = None
+            if total is not None and remaining is not None:
+                used = max(total - remaining, 0)
+            elif quota_data.get("used") is not None:
+                used = self._parse_bytes(quota_data.get("used"))
+
+            percentage = None
+            if used is not None and total not in (None, 0):
+                percentage = (used / total) * 100
+
             labels = {"service": service, "login": login}
-            self.quota_total.labels(**labels).set(total)
-            self.quota_used.labels(**labels).set(used)
-            self.quota_remaining.labels(**labels).set(remaining)
-            self.quota_percentage.labels(**labels).set(percentage)
+            if total is not None:
+                self.quota_total.labels(**labels).set(total)
+            if used is not None:
+                self.quota_used.labels(**labels).set(used)
+            if remaining is not None:
+                self.quota_remaining.labels(**labels).set(remaining)
+            if percentage is not None:
+                self.quota_percentage.labels(**labels).set(percentage)
+
+            ts = quota_data.get("quota_timestamp")
+            if ts:
+                parsed_ts = self._parse_timestamp(ts)
+                if parsed_ts is not None:
+                    self.quota_timestamp.labels(**labels).set(parsed_ts)
 
             logger.debug(
                 "Collected quota metrics",
@@ -108,7 +139,7 @@ class BroadbandQuotaCollector(MetricCollector):
             )
             raise
 
-    def _parse_bytes(self, value: Any) -> float:
+    def _parse_bytes(self, value: Any) -> float | None:
         """Parse byte value from API response.
 
         Args:
@@ -118,15 +149,34 @@ class BroadbandQuotaCollector(MetricCollector):
             Byte value as float
 
         """
+        if value is None:
+            return None
         if isinstance(value, (int, float)):
             return float(value)
-        elif isinstance(value, str):
-            # Try to parse as int
+        if isinstance(value, str):
             try:
                 return float(value)
             except ValueError:
-                return 0.0
-        return 0.0
+                return None
+        return None
+
+    def _parse_timestamp(self, value: Any) -> float | None:
+        """Parse timestamp string to epoch seconds."""
+        if value is None:
+            return None
+        if isinstance(value, (int, float)):
+            return float(value)
+        if isinstance(value, str):
+            # CHAOS returns "YYYY-MM-DD HH:MM:SS"
+            try:
+                dt = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+                return dt.timestamp()
+            except ValueError:
+                try:
+                    return float(value)
+                except ValueError:
+                    return None
+        return None
 
 
 @register_collector(UpdateTier.MEDIUM)
@@ -138,37 +188,19 @@ class BroadbandInfoCollector(MetricCollector):
         self.line_sync_download = self._create_gauge(
             "aaisp_broadband_line_sync_download_bps",
             "Line sync download speed in bits per second",
-            labelnames=["service", "login", "line_type"],
+            labelnames=["service", "login"],
         )
 
         self.line_sync_upload = self._create_gauge(
             "aaisp_broadband_line_sync_upload_bps",
             "Line sync upload speed in bits per second",
-            labelnames=["service", "login", "line_type"],
+            labelnames=["service", "login"],
         )
 
-        self.throughput_download = self._create_gauge(
-            "aaisp_broadband_throughput_download_bps",
-            "Actual download throughput in bits per second",
-            labelnames=["service", "login", "line_type"],
-        )
-
-        self.throughput_upload = self._create_gauge(
-            "aaisp_broadband_throughput_upload_bps",
-            "Actual upload throughput in bits per second",
-            labelnames=["service", "login", "line_type"],
-        )
-
-        self.service_up = self._create_gauge(
-            "aaisp_broadband_service_up",
-            "Service operational status (1 = up, 0 = down)",
-            labelnames=["service", "login", "line_type"],
-        )
-
-        self.line_state = self._create_gauge(
-            "aaisp_broadband_line_state",
-            "Line state (1 = in sync, 0 = out of sync)",
-            labelnames=["service", "login", "line_type"],
+        self.line_sync_download_adjusted = self._create_gauge(
+            "aaisp_broadband_line_sync_download_adjusted_bps",
+            "Adjusted line sync download speed in bits per second",
+            labelnames=["service", "login"],
         )
 
         self.service_info = self._create_gauge(
@@ -177,12 +209,7 @@ class BroadbandInfoCollector(MetricCollector):
             labelnames=[
                 "service",
                 "login",
-                "line_type",
-                "package",
-                "care_level",
-                "router_type",
-                "ipv4_address",
-                "ipv6_prefix",
+                "postcode",
             ],
         )
 
@@ -216,61 +243,37 @@ class BroadbandInfoCollector(MetricCollector):
         """Collect info metrics for a specific service."""
         try:
             info_data = await self.client.broadband_info(service)
+            if not info_data:
+                logger.debug("No broadband info returned", service=service)
+                return
 
-            # Extract fields (actual field names depend on API response)
-            # NOTE: Field names are assumptions and need validation against real API
             login = info_data.get("login", self.settings.auth.control_login or "unknown")
-            line_type = info_data.get("technology", "unknown")  # ADSL, VDSL, FTTP
-            package = info_data.get("package", "unknown")
+            postcode = info_data.get("postcode", "unknown")
+            base_labels = {"service": service, "login": login}
 
-            # Line speeds (may be in different units - check API response)
-            sync_down = self._parse_speed(info_data.get("sync_down", 0))
-            sync_up = self._parse_speed(info_data.get("sync_up", 0))
-            throughput_down = self._parse_speed(info_data.get("throughput_down", 0))
-            throughput_up = self._parse_speed(info_data.get("throughput_up", 0))
+            sync_down = self._parse_speed(info_data.get("tx_rate"))
+            if sync_down is not None:
+                self.line_sync_download.labels(**base_labels).set(sync_down)
 
-            # Service status
-            status = info_data.get("status", "unknown")
-            is_up = 1.0 if status.lower() in ["up", "active", "connected"] else 0.0
+            sync_up = self._parse_speed(info_data.get("rx_rate"))
+            if sync_up is not None:
+                self.line_sync_upload.labels(**base_labels).set(sync_up)
 
-            # Line state (in sync vs out of sync)
-            # Field name assumption - may be "line_status", "sync_status", etc.
-            line_status = info_data.get("line_status", info_data.get("sync_status", "unknown"))
-            is_in_sync = 1.0 if line_status.lower() in ["up", "in sync", "synced", "connected"] else 0.0
+            adjusted_down = self._parse_speed(info_data.get("tx_rate_adjusted"))
+            if adjusted_down is not None:
+                self.line_sync_download_adjusted.labels(**base_labels).set(adjusted_down)
 
-            # Extended service info fields
-            care_level = info_data.get("care_level", info_data.get("care", "unknown"))
-            router_type = info_data.get("router_type", info_data.get("router", "unknown"))
-            ipv4_address = info_data.get("ipv4", info_data.get("ipv4_address", "unknown"))
-            ipv6_prefix = info_data.get("ipv6_prefix", info_data.get("ipv6", "unknown"))
-
-            # Set metrics
-            speed_labels = {"service": service, "login": login, "line_type": line_type}
-            self.line_sync_download.labels(**speed_labels).set(sync_down)
-            self.line_sync_upload.labels(**speed_labels).set(sync_up)
-            self.throughput_download.labels(**speed_labels).set(throughput_down)
-            self.throughput_upload.labels(**speed_labels).set(throughput_up)
-            self.service_up.labels(**speed_labels).set(is_up)
-            self.line_state.labels(**speed_labels).set(is_in_sync)
-
-            info_labels = {
-                **speed_labels,
-                "package": package,
-                "care_level": care_level,
-                "router_type": router_type,
-                "ipv4_address": ipv4_address,
-                "ipv6_prefix": ipv6_prefix,
-            }
-            self.service_info.labels(**info_labels).set(1.0)
+            self.service_info.labels(
+                **base_labels,
+                postcode=postcode,
+            ).set(1.0)
 
             logger.debug(
-                "Collected info metrics",
+                "Collected broadband info metrics",
                 service=service,
-                line_type=line_type,
                 sync_down=sync_down,
                 sync_up=sync_up,
-                status=status,
-                line_status=line_status,
+                adjusted_down=adjusted_down,
             )
 
         except Exception as e:
@@ -281,7 +284,7 @@ class BroadbandInfoCollector(MetricCollector):
             )
             raise
 
-    def _parse_speed(self, value: Any) -> float:
+    def _parse_speed(self, value: Any) -> float | None:
         """Parse speed value from API response (convert to bps).
 
         Args:
@@ -291,133 +294,13 @@ class BroadbandInfoCollector(MetricCollector):
             Speed in bits per second
 
         """
+        if value is None:
+            return None
         if isinstance(value, (int, float)):
-            # Assume already in bps
             return float(value)
-        elif isinstance(value, str):
+        if isinstance(value, str):
             try:
                 return float(value)
             except ValueError:
-                return 0.0
-        return 0.0
-
-
-@register_collector(UpdateTier.SLOW)
-class BroadbandUsageCollector(MetricCollector):
-    """Collector for broadband usage metrics (SLOW tier - 900s).
-
-    NOTE: The format of the /broadband/usage API response is unknown and needs
-    validation against the real CHAOS API. This collector makes assumptions about
-    the response structure and may need adjustment.
-    """
-
-    def _initialize_metrics(self) -> None:
-        """Initialize usage metrics."""
-        # NOTE: Using Gauge for now - may need to change to Counter depending on API format
-        self.usage_download = self._create_gauge(
-            "aaisp_broadband_usage_download_bytes",
-            "Download usage in bytes (current period)",
-            labelnames=["service", "login"],
-        )
-
-        self.usage_upload = self._create_gauge(
-            "aaisp_broadband_usage_upload_bytes",
-            "Upload usage in bytes (current period)",
-            labelnames=["service", "login"],
-        )
-
-    async def _collect_impl(self) -> None:
-        """Collect usage metrics for all broadband services."""
-        if not self.settings.collectors.enable_broadband:
-            logger.debug("Broadband collector disabled")
-            return
-
-        try:
-            # Get list of broadband services
-            services = await self.client.broadband_services()
-            logger.debug("Found broadband services for usage", count=len(services))
-
-            # Collect usage for each service
-            for service in services:
-                try:
-                    await self._collect_service_usage(service)
-                except Exception as e:
-                    logger.error(
-                        "Failed to collect usage for service",
-                        service=service,
-                        error=str(e),
-                    )
-
-        except Exception as e:
-            logger.error("Failed to get broadband services", error=str(e))
-            raise
-
-    async def _collect_service_usage(self, service: str) -> None:
-        """Collect usage metrics for a specific service.
-
-        NOTE: The API response format is unknown. This implementation assumes:
-        - Response contains "download" and "upload" fields with byte values
-        - Values represent current period totals (not time-series)
-
-        This will need adjustment after testing against real API.
-        """
-        try:
-            usage_data = await self.client.broadband_usage(service)
-
-            # Extract login from response (if available)
-            login = usage_data.get("login", self.settings.auth.control_login or "unknown")
-
-            # Extract usage values
-            # NOTE: Field names and structure are assumptions
-            # The API may return:
-            # - Simple totals: {"download": 123456, "upload": 654321}
-            # - Time-series data: {"usage": [{"time": "...", "download": ..., "upload": ...}]}
-            # - Aggregated data: {"total_download": ..., "total_upload": ...}
-            #
-            # For now, assume simple totals. Will need adjustment after API testing.
-            download_bytes = self._parse_bytes(
-                usage_data.get("download", usage_data.get("download_bytes", 0))
-            )
-            upload_bytes = self._parse_bytes(
-                usage_data.get("upload", usage_data.get("upload_bytes", 0))
-            )
-
-            # Set metrics
-            labels = {"service": service, "login": login}
-            self.usage_download.labels(**labels).set(download_bytes)
-            self.usage_upload.labels(**labels).set(upload_bytes)
-
-            logger.debug(
-                "Collected usage metrics",
-                service=service,
-                download=download_bytes,
-                upload=upload_bytes,
-            )
-
-        except Exception as e:
-            logger.warning(
-                "Error collecting usage for service (API format may not match expectations)",
-                service=service,
-                error=str(e),
-            )
-            # Don't raise - usage collection is experimental until API format is validated
-
-    def _parse_bytes(self, value: Any) -> float:
-        """Parse byte value from API response.
-
-        Args:
-            value: Value from API (could be int, string, etc.)
-
-        Returns:
-            Byte value as float
-
-        """
-        if isinstance(value, (int, float)):
-            return float(value)
-        elif isinstance(value, str):
-            try:
-                return float(value)
-            except ValueError:
-                logger.warning("Could not parse bytes value", value=value)
-                return 0.0
-        return 0.0
+                return None
+        return None

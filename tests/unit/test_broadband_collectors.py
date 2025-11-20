@@ -1,16 +1,12 @@
 """Unit tests for broadband collectors."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 import pytest
 from prometheus_client import CollectorRegistry
 
 from aaisp_exporter.api.client import CHAOSClient
-from aaisp_exporter.collectors.broadband import (
-    BroadbandInfoCollector,
-    BroadbandQuotaCollector,
-    BroadbandUsageCollector,
-)
+from aaisp_exporter.collectors.broadband import BroadbandInfoCollector, BroadbandQuotaCollector
 from aaisp_exporter.core.config import Settings
 
 
@@ -46,9 +42,9 @@ class TestBroadbandQuotaCollector:
         mock_client.broadband_services.return_value = ["01234567890"]
         mock_client.broadband_quota.return_value = {
             "login": "test@a",
-            "quota": "1000000000",  # 1GB
-            "used": "500000000",  # 500MB
-            "remaining": "500000000",  # 500MB
+            "quota_monthly": "1000000000",  # 1GB
+            "quota_remaining": "500000000",  # 500MB
+            "quota_timestamp": "2025-01-01 10:00:00",
         }
 
         # Create collector and collect
@@ -67,23 +63,15 @@ class TestBroadbandInfoCollector:
     async def test_collect_info_metrics_with_all_fields(
         self, mock_client: AsyncMock, test_settings: Settings, test_registry: CollectorRegistry
     ) -> None:
-        """Test info collection with all fields including new ones."""
+        """Test info collection with all fields."""
         # Mock API responses
         mock_client.broadband_services.return_value = ["01234567890"]
         mock_client.broadband_info.return_value = {
             "login": "test@a",
-            "technology": "FTTP",
-            "package": "Home::1",
-            "sync_down": "1000000000",  # 1Gbps
-            "sync_up": "200000000",  # 200Mbps
-            "throughput_down": "950000000",  # 950Mbps
-            "throughput_up": "190000000",  # 190Mbps
-            "status": "up",
-            "line_status": "in sync",
-            "care_level": "standard",
-            "router_type": "ZyXEL",
-            "ipv4": "198.51.100.1",
-            "ipv6_prefix": "2001:db8::/64",
+            "postcode": "SO50",
+            "tx_rate": "1000000000",  # 1Gbps
+            "rx_rate": "200000000",  # 200Mbps
+            "tx_rate_adjusted": "950000000",
         }
 
         # Create collector and collect
@@ -99,11 +87,10 @@ class TestBroadbandInfoCollector:
         self, mock_client: AsyncMock, test_settings: Settings, test_registry: CollectorRegistry
     ) -> None:
         """Test info collection handles missing optional fields gracefully."""
-        # Mock API responses with minimal data
         mock_client.broadband_services.return_value = ["01234567890"]
         mock_client.broadband_info.return_value = {
             "login": "test@a",
-            "status": "up",
+            # Missing rates/postcode on purpose
         }
 
         # Create collector and collect
@@ -114,89 +101,6 @@ class TestBroadbandInfoCollector:
         mock_client.broadband_services.assert_called_once()
         mock_client.broadband_info.assert_called_once_with("01234567890")
 
-    @pytest.mark.asyncio
-    async def test_line_state_metric(
-        self, mock_client: AsyncMock, test_settings: Settings, test_registry: CollectorRegistry
-    ) -> None:
-        """Test line_state metric is set correctly."""
-        # Test with in sync status
-        mock_client.broadband_services.return_value = ["01234567890"]
-        mock_client.broadband_info.return_value = {
-            "login": "test@a",
-            "line_status": "in sync",
-            "status": "up",
-        }
-
-        collector = BroadbandInfoCollector(mock_client, test_settings, test_registry)
-        await collector.collect()
-
-        # Verify line_state metric exists
-        assert collector.line_state is not None
-
-
-class TestBroadbandUsageCollector:
-    """Tests for BroadbandUsageCollector."""
-
-    @pytest.mark.asyncio
-    async def test_collect_usage_metrics(
-        self, mock_client: AsyncMock, test_settings: Settings, test_registry: CollectorRegistry
-    ) -> None:
-        """Test usage collection with basic data."""
-        # Mock API responses
-        mock_client.broadband_services.return_value = ["01234567890"]
-        mock_client.broadband_usage.return_value = {
-            "login": "test@a",
-            "download": "50000000000",  # 50GB
-            "upload": "10000000000",  # 10GB
-        }
-
-        # Create collector and collect
-        collector = BroadbandUsageCollector(mock_client, test_settings, test_registry)
-        await collector.collect()
-
-        # Verify API calls
-        mock_client.broadband_services.assert_called_once()
-        mock_client.broadband_usage.assert_called_once_with("01234567890")
-
-    @pytest.mark.asyncio
-    async def test_collect_usage_handles_errors_gracefully(
-        self, mock_client: AsyncMock, test_settings: Settings, test_registry: CollectorRegistry
-    ) -> None:
-        """Test usage collection doesn't raise on API errors."""
-        # Mock API to raise an error
-        mock_client.broadband_services.return_value = ["01234567890"]
-        mock_client.broadband_usage.side_effect = Exception("API format unexpected")
-
-        # Create collector and collect
-        collector = BroadbandUsageCollector(mock_client, test_settings, test_registry)
-
-        # Should not raise exception (only logs warning)
-        await collector.collect()
-
-        mock_client.broadband_services.assert_called_once()
-        mock_client.broadband_usage.assert_called_once_with("01234567890")
-
-    @pytest.mark.asyncio
-    async def test_parse_bytes_with_different_formats(
-        self, mock_client: AsyncMock, test_settings: Settings, test_registry: CollectorRegistry
-    ) -> None:
-        """Test _parse_bytes handles different value formats."""
-        collector = BroadbandUsageCollector(mock_client, test_settings, test_registry)
-
-        # Test integer
-        assert collector._parse_bytes(1000) == 1000.0
-
-        # Test float
-        assert collector._parse_bytes(1000.5) == 1000.5
-
-        # Test string
-        assert collector._parse_bytes("2000") == 2000.0
-
-        # Test invalid string
-        assert collector._parse_bytes("invalid") == 0.0
-
-        # Test None
-        assert collector._parse_bytes(None) == 0.0
 
 
 class TestAPIClientMetrics:

@@ -131,7 +131,7 @@ class LoggingSettings(BaseSettings):
         default=DEFAULT_LOG_LEVEL,  # type: ignore[arg-type]
         description="Log level",
     )
-    json: bool = Field(
+    json_format: bool = Field(
         default=False,
         description="Enable JSON logging",
     )
@@ -142,15 +142,21 @@ class CollectorSettings(BaseSettings):
 
     enable_broadband: bool = Field(
         default=True,
-        description="Enable broadband collector",
+        description="Enable broadband collectors (quota, info, usage)",
     )
     enable_telephony: bool = Field(
         default=False,
-        description="Enable telephony collector",
+        description="Enable telephony info collector (call stats, service status). "
+                    "Only enable if you have AAISP telephony/VoIP services.",
     )
-    enable_login: bool = Field(
+    enable_telephony_ratecard: bool = Field(
         default=False,
-        description="Enable login collector",
+        description="Enable telephony ratecard collector (rate monitoring). "
+                    "Only enable if you have AAISP telephony/VoIP services.",
+    )
+    enable_control_login: bool = Field(
+        default=False,
+        description="Enable control login collector (CHAOS API login accounts)",
     )
 
 

@@ -2,8 +2,8 @@
 
 ## Project Status
 Started: 2025-11-11
-Last Updated: 2025-11-12
-Current Phase: ✅ All Phase 1-6 metrics implemented (100% coverage) - Ready for API testing
+Last Updated: 2025-11-13
+Current Phase: ✅ Comprehensive metrics expansion complete - All major subsystems implemented
 
 ## Session Summary
 
@@ -26,6 +26,82 @@ Current Phase: ✅ All Phase 1-6 metrics implemented (100% coverage) - Ready for
 - ✅ Updated CHAOSClient to accept registry and record metrics
 - ✅ Created comprehensive unit tests for all broadband collectors and API metrics
 - **Result**: 20/20 Phase 1-6 metrics now implemented (100% coverage)
+
+### Session 3 (2025-11-13)
+**Major Expansion: Comprehensive Metrics & New Subsystems**
+
+#### Broadband Enhancements
+- ✅ Enhanced BroadbandInfoCollector with 18 NEW metrics:
+  - **Line Quality**: SNR margin (up/down), attenuation (up/down), FEC/CRC/HEC errors
+  - **Session Tracking**: uptime, start timestamp, active PPP sessions
+  - **IPv6**: enabled status, prefix length extraction
+  - **QoS**: latency, jitter, packet loss
+- ✅ Added 7 helper parsing methods for robust data extraction
+- ✅ Graceful handling of missing/optional API fields
+- **Total Broadband Metrics**: 30+ metrics across 3 collectors
+
+#### New Subsystems Implemented
+- ✅ **Domain Collector** (SLOW tier - 900s):
+  - Domain info, expiry monitoring, days until expiry
+  - Auto-renew status tracking
+  - 3 metrics with date parsing support
+- ✅ **Telephony Info Collector** (MEDIUM tier - 300s):
+  - Service status, call statistics (inbound/outbound)
+  - Call counts, duration, costs tracking
+  - Active calls monitoring
+  - 5 metrics across call tracking and service info
+- ✅ **Telephony Ratecard Collector** (SLOW tier - 900s):
+  - Rate per minute by destination
+  - Ratecard update timestamp
+  - 2 metrics for rate monitoring
+
+#### API Client Extensions
+- ✅ Added `telephony_services()` and `telephony_info()` methods
+- ✅ Added `domain_services()` and `domain_info()` methods
+- **Total API Methods**: 10 methods across 3 subsystems
+
+#### Configuration & Documentation
+- ✅ Added collector toggles: `enable_domain`, `enable_telephony_ratecard`
+- ✅ Updated .env.example, .env, docker-compose.yml with new toggles
+- ✅ Comprehensive README metrics documentation (130+ lines)
+- ✅ Updated collectors/__init__.py to register new modules
+- **Total Collector Toggles**: 5 (broadband, telephony, telephony_ratecard, domain, control_login)
+
+#### Metrics Summary
+- **Broadband**: 30+ metrics (quota, speeds, line quality, session, IPv6, QoS, status, usage)
+- **Telephony**: 7 metrics (service info, calls, duration, cost, rates)
+- **Exporter**: 7 metrics (uptime, build info, collector stats, API stats)
+- **TOTAL**: 44+ metrics across all subsystems
+
+### Session 4 (2025-11-13)
+**Error Handling & Domain Subsystem Removal**
+
+#### Error Handling Improvements
+- ✅ Added graceful error handling to Domain collector for "Unknown command" errors
+- ✅ Added graceful error handling to Telephony collectors for HTTP 500 errors
+- ✅ Added L2TP tunnel detection to Broadband collector
+  - Detects L2TP tunnels from service type/technology/package fields
+  - Skips physical line metrics (SNR, attenuation, errors) for L2TP
+  - Still collects tunnel-level metrics (status, uptime, quota)
+- ✅ Updated default configuration to disable non-working collectors
+- ✅ Enhanced README with comprehensive troubleshooting documentation
+
+#### Domain Subsystem Removal
+- ✅ **Removed Domain Collector** - Domain subsystem NOT IMPLEMENTED in CHAOS API (marked "TBA")
+- ✅ Deleted `src/aaisp_exporter/collectors/domains.py`
+- ✅ Removed domain imports from `collectors/__init__.py`
+- ✅ Removed `domain_services()` and `domain_info()` from API client
+- ✅ Removed `enable_domain` configuration field
+- ✅ Updated all config files (.env, .env.example, docker-compose.yml)
+- ✅ Removed domain metrics documentation from README
+- ✅ Removed domain troubleshooting section from README
+
+**Rationale**: The CHAOS API documentation explicitly marks the domain subsystem as "TBA" (To Be Announced) and returns "Unknown command" errors. Rather than gracefully handle errors for an unimplemented subsystem, we removed it entirely to avoid:
+- Unnecessary API calls on every collection cycle
+- Confusing log warnings
+- Configuration complexity for a feature that doesn't exist
+
+**Result**: Cleaner codebase with only functional collectors. Domain support can be added in the future if/when CHAOS API implements it.
 
 **Next Critical Step**: Test against real CHAOS API and adjust field parsing based on actual responses
 
@@ -91,12 +167,13 @@ Current Phase: ✅ All Phase 1-6 metrics implemented (100% coverage) - Ready for
 - [x] Code coverage reporting (configured, needs more tests)
 - [x] Security scanning (bandit)
 
-### Phase 7: Additional Collectors (Future)
-- [ ] Login collector (basic)
-- [ ] Telephony collector (basic)
-- [ ] Domain collector (when API available)
-- [ ] Email collector (when API available)
-- [ ] SIM collector (when API available)
+### Phase 7: Additional Collectors ✅ MOSTLY COMPLETED
+- [ ] Control login collector (basic) - Config ready, collector not yet implemented
+- [x] Telephony info collector (basic) - COMPLETED (Session 3)
+- [x] Telephony ratecard collector - COMPLETED (Session 3)
+- [x] ~~Domain collector~~ - REMOVED (Session 4) - Subsystem not implemented in CHAOS API
+- [ ] Email collector (when API available and needed)
+- [ ] SIM collector (when API available and needed)
 
 ---
 

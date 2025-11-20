@@ -93,7 +93,7 @@ AAISP_EXPORTER_SERVER__PORT=9099             # Default: 9099
 
 ```bash
 AAISP_EXPORTER_LOGGING__LEVEL=INFO           # Default: INFO
-AAISP_EXPORTER_LOGGING__JSON=false           # Default: false
+AAISP_EXPORTER_LOGGING__JSON_FORMAT=false    # Default: false
 ```
 
 ### Collection Intervals
@@ -116,9 +116,10 @@ AAISP_EXPORTER_API__CONCURRENCY_LIMIT=5      # Default: 5
 ### Collector Toggles
 
 ```bash
-AAISP_EXPORTER_COLLECTORS__ENABLE_BROADBAND=true   # Default: true
-AAISP_EXPORTER_COLLECTORS__ENABLE_TELEPHONY=false  # Default: false
-AAISP_EXPORTER_COLLECTORS__ENABLE_LOGIN=false      # Default: false
+AAISP_EXPORTER_COLLECTORS__ENABLE_BROADBAND=true              # Default: true
+AAISP_EXPORTER_COLLECTORS__ENABLE_TELEPHONY=false             # Default: false
+AAISP_EXPORTER_COLLECTORS__ENABLE_TELEPHONY_RATECARD=false    # Default: false
+AAISP_EXPORTER_COLLECTORS__ENABLE_CONTROL_LOGIN=false         # Default: false
 ```
 
 See `.env.example` for a complete configuration template.
@@ -131,6 +132,7 @@ See `.env.example` for a complete configuration template.
 - `aaisp_broadband_quota_used_bytes` - Used quota in bytes
 - `aaisp_broadband_quota_remaining_bytes` - Remaining quota in bytes
 - `aaisp_broadband_quota_percentage` - Percentage of quota used
+- `aaisp_broadband_quota_timestamp_seconds` - Timestamp of quota snapshot
 
 Labels: `service`, `login`
 
@@ -138,17 +140,36 @@ Labels: `service`, `login`
 
 - `aaisp_broadband_line_sync_download_bps` - Line sync download speed (bps)
 - `aaisp_broadband_line_sync_upload_bps` - Line sync upload speed (bps)
-- `aaisp_broadband_throughput_download_bps` - Actual download throughput (bps)
-- `aaisp_broadband_throughput_upload_bps` - Actual upload throughput (bps)
+- `aaisp_broadband_line_sync_download_adjusted_bps` - Adjusted line sync download speed (bps)
 
-Labels: `service`, `login`, `line_type`
+Labels: `service`, `login`
 
-### Broadband Service Metrics
+### Broadband Service Info (Medium Tier - 300s)
 
-- `aaisp_broadband_service_up` - Service status (1 = up, 0 = down)
-- `aaisp_broadband_service_info` - Service information (info in labels)
+- `aaisp_broadband_service_info` - Service information (value always 1, info in labels)
 
-Labels: `service`, `login`, `line_type`, `package`
+Labels: `service`, `login`, `postcode`
+
+### Telephony Service Metrics (Medium Tier - 300s)
+
+- `aaisp_telephony_service_info` - Service information (value always 1, info in labels)
+- `aaisp_telephony_calls_total` - Total number of calls (counter)
+- `aaisp_telephony_call_duration_seconds_total` - Total call duration in seconds (counter)
+- `aaisp_telephony_call_cost_total` - Total call cost (counter)
+- `aaisp_telephony_active_calls` - Number of currently active calls
+
+Labels vary by metric:
+- Info: `number`, `status`, `call_forwarding`, `voicemail`, `service_type`
+- Stats: `number`, `direction` (inbound/outbound), `currency` (for cost)
+
+### Telephony Rate Card Metrics (Slow Tier - 900s)
+
+- `aaisp_telephony_rate_ppm` - Rate per minute (pence) per rate/period (peak/offpeak/weekend)
+- `aaisp_telephony_rate_min_charge_pence` - Minimum call charge (pence) per rate
+- `aaisp_telephony_prefixes_total` - Number of prefixes mapped to a rate
+- `aaisp_telephony_ratecard_last_updated_timestamp_seconds` - When rate card was last updated
+
+Labels: `rate_name` (+ `period` for `aaisp_telephony_rate_ppm`)
 
 ### Exporter Metrics
 
@@ -157,8 +178,10 @@ Labels: `service`, `login`, `line_type`, `package`
 - `aaisp_collector_duration_seconds` - Collection duration histogram
 - `aaisp_collector_errors_total` - Total collection errors
 - `aaisp_collector_last_successful_collection_timestamp` - Last successful collection timestamp
+- `aaisp_api_requests_total` - Total API requests to CHAOS API
+- `aaisp_api_request_duration_seconds` - Duration of API requests
 
-See `todo.txt` for the complete metrics catalog.
+**Note:** Many line quality, session, and QoS metrics are only set if the API provides the data. Missing fields are handled gracefully.
 
 ## Endpoints
 
@@ -311,6 +334,38 @@ If you see authentication errors, verify:
 2. Control login has access to broadband services
 3. No rate limiting is occurring
 
+### Telephony Collector Warnings
+
+**Warning**: `Telephony services query failed` or HTTP 500 errors
+
+**Cause**: Your account may not have AAISP telephony/VoIP services, or the `services` command is not fully implemented for telephony.
+
+**Solution**: This is expected if you don't have VoIP services. Disable the collectors with:
+```bash
+AAISP_EXPORTER_COLLECTORS__ENABLE_TELEPHONY=false
+AAISP_EXPORTER_COLLECTORS__ENABLE_TELEPHONY_RATECARD=false
+```
+
+Note: The `ratecard` endpoint works even without telephony services (returns global rates).
+
+### L2TP Tunnel Connections
+
+**Info**: `Detected L2TP tunnel connection - will skip physical line metrics`
+
+**Explanation**: L2TP tunnel connections run over another ISP's infrastructure and don't expose physical line metrics like SNR, attenuation, or sync rates. This is expected behavior.
+
+**Metrics available** for L2TP tunnels:
+- Service status (up/down)
+- Session uptime
+- Basic service info
+- Quota and usage (if applicable)
+
+**Metrics NOT available** for L2TP tunnels:
+- Line sync rates
+- SNR margin
+- Line attenuation
+- Line errors (FEC/CRC/HEC)
+
 ### No Metrics Appearing
 
 Check:
@@ -318,12 +373,22 @@ Check:
 1. Exporter is running: `curl http://localhost:9099/health`
 2. Services are being discovered: Check logs for "Found broadband services"
 3. No API errors in logs
+4. Broadband collector is enabled (default)
 
 ### High API Error Rate
 
 - Reduce collection frequency via interval settings
 - Check API rate limits
 - Verify network connectivity to `chaos2.aa.net.uk`
+
+### Collector Fails to Start
+
+If collectors are failing during startup:
+
+1. Check that the correct authentication credentials are configured
+2. Disable unused collectors (domain, telephony) if you don't have those services
+3. Review logs for specific error messages
+4. Ensure the CHAOS API is accessible from your network
 
 ## Contributing
 

@@ -282,6 +282,15 @@ class CHAOSClient:
                 command=command,
             ).observe(duration)
 
+    def _extract_single_object(self, data: dict[str, Any], key: str) -> dict[str, Any]:
+        """Extract the first object from a list-or-dict response field."""
+        value = data.get(key, {})
+        if isinstance(value, list):
+            return value[0] if value else {}
+        if isinstance(value, dict):
+            return value
+        return {}
+
     async def broadband_services(self) -> list[str]:
         """Get list of broadband service IDs.
 
@@ -290,14 +299,44 @@ class CHAOSClient:
 
         """
         response = await self.request(Subsystem.BROADBAND, "services")
-        # Extract service IDs from response
-        # The exact format will depend on actual API response
-        services = response.get("service", [])
+        # CHAOS returns "services": ["60865", ...]
+        services = response.get("services") or response.get("service") or []
+        service_ids: set[str] = set()
         if isinstance(services, list):
-            return services
+            service_ids.update(str(s) for s in services)
         elif isinstance(services, str):
-            return [services]
-        return []
+            service_ids.add(services)
+
+        # Try to discover additional services from the service selector options
+        # by making a single info call. Some accounts expose extra services only
+        # via the <options>/<choice> list.
+        try:
+            sample_service = next(iter(service_ids), None)
+            if sample_service:
+                raw_info = await self.request(
+                    Subsystem.BROADBAND, "info", {"service": sample_service}
+                )
+                options = raw_info.get("options") or []
+                if isinstance(options, dict):
+                    options = [options]
+                for opt_group in options:
+                    option_list = opt_group.get("option") or []
+                    if isinstance(option_list, dict):
+                        option_list = [option_list]
+                    for option in option_list:
+                        if option.get("name") != "service":
+                            continue
+                        choices = option.get("choice") or []
+                        if isinstance(choices, dict):
+                            choices = [choices]
+                        for choice in choices:
+                            val = choice.get("value")
+                            if val:
+                                service_ids.add(str(val))
+        except Exception as e:
+            logger.debug("Service discovery via info failed", error=str(e))
+
+        return list(service_ids)
 
     async def broadband_info(self, service: str) -> dict[str, Any]:
         """Get broadband service information.
@@ -309,7 +348,8 @@ class CHAOSClient:
             Service information
 
         """
-        return await self.request(Subsystem.BROADBAND, "info", {"service": service})
+        response = await self.request(Subsystem.BROADBAND, "info", {"service": service})
+        return self._extract_single_object(response, "info")
 
     async def broadband_quota(self, service: str) -> dict[str, Any]:
         """Get broadband quota information.
@@ -321,7 +361,8 @@ class CHAOSClient:
             Quota information
 
         """
-        return await self.request(Subsystem.BROADBAND, "quota", {"service": service})
+        response = await self.request(Subsystem.BROADBAND, "quota", {"service": service})
+        return self._extract_single_object(response, "quota")
 
     async def broadband_usage(self, service: str) -> dict[str, Any]:
         """Get broadband usage information.
@@ -333,7 +374,8 @@ class CHAOSClient:
             Usage information
 
         """
-        return await self.request(Subsystem.BROADBAND, "usage", {"service": service})
+        response = await self.request(Subsystem.BROADBAND, "usage", {"service": service})
+        return self._extract_single_object(response, "usage")
 
     async def login_services(self) -> list[str]:
         """Get list of control login services.
@@ -343,10 +385,10 @@ class CHAOSClient:
 
         """
         response = await self.request(Subsystem.LOGIN, "services")
-        services = response.get("service", [])
+        services = response.get("services") or response.get("service") or []
         if isinstance(services, list):
-            return services
-        elif isinstance(services, str):
+            return [str(s) for s in services]
+        if isinstance(services, str):
             return [services]
         return []
 
@@ -361,6 +403,33 @@ class CHAOSClient:
 
         """
         return await self.request(Subsystem.LOGIN, "info", {"service": service})
+
+    async def telephony_services(self) -> list[str]:
+        """Get list of telephony service IDs.
+
+        Returns:
+            List of service identifiers (phone numbers)
+
+        """
+        response = await self.request(Subsystem.TELEPHONY, "services")
+        services = response.get("services") or response.get("service") or []
+        if isinstance(services, list):
+            return [str(s) for s in services]
+        if isinstance(services, str):
+            return [services]
+        return []
+
+    async def telephony_info(self, service: str) -> dict[str, Any]:
+        """Get telephony service information.
+
+        Args:
+            service: Service identifier (phone number)
+
+        Returns:
+            Service information
+
+        """
+        return await self.request(Subsystem.TELEPHONY, "info", {"service": service})
 
     async def telephony_ratecard(self) -> dict[str, Any]:
         """Get telephony rate card.
