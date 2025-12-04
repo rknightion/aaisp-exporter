@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile for AAISP CHAOS API Exporter
 
 # Builder stage
-FROM python:3.13-slim-bookworm AS builder
+FROM python:3.14-slim-bookworm AS builder
 
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
@@ -19,7 +19,7 @@ RUN uv sync --frozen --no-dev --no-install-project
 COPY src/ ./src/
 
 # Runtime stage
-FROM python:3.13-slim-bookworm AS runtime
+FROM python:3.14-slim-bookworm AS runtime
 
 # Install security updates
 RUN apt-get update && \
